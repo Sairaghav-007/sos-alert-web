@@ -18,7 +18,7 @@ export default function Login({ onLogin }) {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         alert("✅ Login successful!");
-        navigate("/student-dashboard");
+        navigate("/student-sos");
       }
     } catch (error) {
       alert("❌ " + error.message);

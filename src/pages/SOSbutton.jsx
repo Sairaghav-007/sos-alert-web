@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { app } from "../firebase"; // adjust this if your firebase is initialized elsewhere
+
 
 export default function SOSbutton() {
   const [severity, setSeverity] = useState("Medium");
   const [landmark, setLandmark] = useState("");
   const [location, setLocation] = useState({ lat: null, lng: null });
+  const functions = getFunctions(app);
+  const sendSosAlert = httpsCallable(functions, "sendSosAlert");
+
 
   // Automatically get user's location
   useEffect(() => {
@@ -29,10 +35,10 @@ export default function SOSbutton() {
   const sendSOS = async () => {
     const user = auth.currentUser;
     if (!user) return alert("Please log in first!");
-
     if (!landmark.trim()) return alert("Please enter your landmark.");
 
     try {
+      // Save the alert to Firestore
       await addDoc(collection(db, "alerts"), {
         uid: user.uid,
         email: user.email,
@@ -42,11 +48,19 @@ export default function SOSbutton() {
         location,
         status: "ACTIVE",
       });
-      alert("🚨 SOS Alert Sent!");
+
+      // Trigger the cloud function to send SMS
+      const message = `🚨 SOS Alert!\nFrom: ${user.email}\nSeverity: ${severity}\nLandmark: ${landmark}\nLocation: ${location.lat?.toFixed(4)}, ${location.lng?.toFixed(4)}`;
+      console.log("Sending message:", message);
+      await sendSosAlert({ message });
+
+
+      alert("🚨 SOS Alert Sent to Admins!");
     } catch (error) {
       alert("Error sending alert: " + error.message);
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-red-100 px-4">

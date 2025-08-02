@@ -25,7 +25,7 @@ export default function Navbar({ role }) {
       {/* Right - Buttons */}
       <div className="flex space-x-3 items-center">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/student-sos")}
           className="bg-red-500 hover:bg-red-600 px-4 py-1 rounded text-white font-semibold"
         >
           SOS
