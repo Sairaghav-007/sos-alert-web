@@ -5,6 +5,7 @@ import AdminLogin from "./pages/AdminLogin";
 import SOSButton from "./pages/SOSbutton";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
+import StudentDashboard from "./pages/Student-Dashboard";
 
 export default function App() {
   return (
@@ -16,7 +17,8 @@ export default function App() {
 
         {/* Pages with Navbar */}
         <Route element={<Layout />}>
-          <Route path="/student-dashboard" element={<SOSButton />} />
+          <Route path="/student-sos" element={<SOSButton />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/admin-dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
