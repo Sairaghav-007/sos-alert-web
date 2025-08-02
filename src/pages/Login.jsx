@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Login({ onLogin }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignup, setIsSignup] = useState(false);
@@ -16,7 +18,7 @@ export default function Login({ onLogin }) {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         alert("✅ Login successful!");
-        onLogin();
+        navigate("/student-dashboard");
       }
     } catch (error) {
       alert("❌ " + error.message);
